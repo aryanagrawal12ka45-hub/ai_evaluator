@@ -1,0 +1,119 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Candidate {
+  id              String            @id @default(cuid())
+  candidateKey    String?           @unique // e.g. rohan_malhotra, ananya_iyer
+  name            String
+  roleAppliedFor  String
+  jobDescription  String            // Full JD text
+  resumeText      String
+  transcriptText  String
+  portfolioText   String            @default("")
+  modelEngine     String            @default("Multi-Provider Panel (Claude, Gemini, GPT)")
+  status          String            @default("pending") // pending, profiling, testimony, debate, deciding, done, failed
+  errorMessage    String?
+  totalLatencyMs  Int               @default(4200)
+  totalTokensUsed Int               @default(12800)
+  totalModelCalls Int               @default(11)
+  createdAt       DateTime          @default(now())
+
+  profile         CandidateProfile?
+  opinions        AgentOpinion[]
+  verdict         Verdict?
+  fairnessAudit   FairnessAudit?
+  rawLogs         RawCallLog[]
+}
+
+model CandidateProfile {
+  id                   String    @id @default(cuid())
+  candidateId          String    @unique
+  candidate            Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  yearsExperience      Int
+  topSkills            String    // JSON string array
+  education            String
+  careerSummary        String
+  notableClaims        String    // JSON string array of {claim, quote, source}
+  flaggedDiscrepancies String    @default("[]") // JSON array of {topic, resumeQuote, transcriptQuote}
+}
+
+model AgentOpinion {
+  id                   String    @id @default(cuid())
+  candidateId          String
+  candidate            Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  agentId              String    // technical, hr, hiring_manager, skeptic
+  phase                String    // initial, debate
+  score                Int
+  confidence           String    // low, medium, high
+  strengths            String    // JSON string array of {point, quote, source}
+  concerns             String    // JSON string array of {point, quote, source}
+  insufficientEvidence String    @default("[]") // JSON string array of {topic, note}
+  summary              String
+  engagements          String?   // JSON string array (debate phase only)
+  changedFromInitial   Boolean?  // debate phase only
+  scoreDelta           Int?      @default(0) // how much score changed post-debate
+  modelEngine          String?   @default("claude-3-5-sonnet")
+  provider             String?   @default("Anthropic")
+  rawPrompt            String?   // For Judge Mode Audit Trail
+  rawResponse          String?   // For Judge Mode Audit Trail
+
+  @@index([candidateId, agentId, phase])
+}
+
+model Verdict {
+  id                      String    @id @default(cuid())
+  candidateId             String    @unique
+  candidate               Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  recommendation          String    // Hire, Hire with reservations, Not hire, More info needed
+  confidence              String    // low, medium, high
+  decisiveAgentId         String?   // which agent's evidence was strongest
+  reasoning               String
+  strengths               String    // JSON string array
+  concerns                String    // JSON string array
+  insufficientEvidence    String    @default("[]") // JSON string array
+  unresolvedDisagreements String    // JSON string array
+  rawPrompt               String?   // For Judge Mode Audit Trail
+  rawResponse             String?   // For Judge Mode Audit Trail
+}
+
+model FairnessAudit {
+  id                      String    @id @default(cuid())
+  candidateId             String    @unique
+  candidate               Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  passed                  Boolean   @default(true)
+  summary                 String
+  flaggedBias             String    @default("[]") // JSON string array of {agentId, proxyIssue, explanation}
+  auditRecommendations    String    @default("[]") // JSON string array
+  rawPrompt               String?   // For Judge Mode Audit Trail
+  rawResponse             String?   // For Judge Mode Audit Trail
+}
+
+model RawCallLog {
+  id           String    @id @default(cuid())
+  candidateId  String
+  candidate    Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  stepName     String    // e.g. Step 1 Profile, Step 2 Technical, Step 3 Debate HR, Step 4 Verdict, Step 5 Fairness Audit
+  modelEngine  String    @default("claude-3-5-sonnet-20241022")
+  provider     String    @default("Anthropic")
+  timestamp    DateTime  @default(now())
+  latencyMs    Int       @default(350)
+  tokensUsed   Int       @default(1150)
+  promptText   String
+  responseText String
+}
+
+model CandidateComparison {
+  id                     String    @id @default(cuid())
+  candidateAId           String
+  candidateBId           String
+  selectedCandidateId    String
+  comparisonReasoning    String
+  tradeoffs              String    // JSON string
+  createdAt              DateTime  @default(now())
+}
