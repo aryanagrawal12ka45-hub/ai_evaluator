@@ -19,14 +19,20 @@ import {
 export const revalidate = 0;
 
 export default async function DashboardPage() {
-  const candidates = await prisma.candidate.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      profile: true,
-      verdict: true,
-      opinions: true,
-    },
-  });
+  let candidates: any[] = [];
+  try {
+    candidates = await prisma.candidate.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        profile: true,
+        verdict: true,
+        opinions: true,
+      },
+    });
+  } catch (err) {
+    console.error("DashboardPage DB fetch error:", err);
+    candidates = [];
+  }
 
   const totalCases = candidates.length;
   const hiresCount = candidates.filter((c) => c.verdict?.recommendation === "Hire").length;

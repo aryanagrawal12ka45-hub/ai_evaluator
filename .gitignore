@@ -30,8 +30,9 @@ yarn-error.log*
 next-env.d.ts
 
 # SQLite database
-dev.db
 dev.db-journal
 
 # Scratch directory
 /scratch
+
+.vercel
