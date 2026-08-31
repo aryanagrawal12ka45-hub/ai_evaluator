@@ -282,28 +282,30 @@ export default function AddNewCandidatePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-xs font-mono font-bold uppercase text-[#D4A537] block">
+              <label htmlFor="candidate-name" className="text-xs font-mono font-bold uppercase text-[#D4A537] block">
                 Candidate Full Name *
               </label>
               <input
+                id="candidate-name"
                 type="text"
                 placeholder="e.g. Maya Chen"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-[#15181C] border border-white/20 rounded px-4 py-3 text-[#E8E4D8] font-body focus:border-[#D4A537] outline-none"
+                className="w-full bg-[#15181C] border border-white/20 rounded px-4 py-3 text-[#E8E4D8] font-body focus:border-[#D4A537] focus-visible:ring-2 focus-visible:ring-[#D4A537] outline-none"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-mono font-bold uppercase text-[#D4A537] block">
+              <label htmlFor="target-role" className="text-xs font-mono font-bold uppercase text-[#D4A537] block">
                 Target Role Applied For *
               </label>
               <input
+                id="target-role"
                 type="text"
                 placeholder="e.g. Senior Backend Engineer"
                 value={roleAppliedFor}
                 onChange={(e) => setRoleAppliedFor(e.target.value)}
-                className="w-full bg-[#15181C] border border-white/20 rounded px-4 py-3 text-[#E8E4D8] font-body focus:border-[#D4A537] outline-none"
+                className="w-full bg-[#15181C] border border-white/20 rounded px-4 py-3 text-[#E8E4D8] font-body focus:border-[#D4A537] focus-visible:ring-2 focus-visible:ring-[#D4A537] outline-none"
               />
             </div>
           </div>
@@ -383,13 +385,19 @@ export default function AddNewCandidatePage() {
             </h3>
           </div>
 
-          <textarea
-            rows={12}
-            placeholder="Paste candidate resume plain text here..."
-            value={resumeText}
-            onChange={(e) => setResumeText(e.target.value)}
-            className="w-full bg-[#15181C] border border-white/20 rounded p-4 text-[#E8E4D8] font-mono text-xs leading-relaxed focus:border-[#D4A537] outline-none"
-          />
+          <div className="space-y-2">
+            <label htmlFor="resume-text" className="text-xs font-mono font-bold uppercase text-[#D4A537] block">
+              Resume Text Content *
+            </label>
+            <textarea
+              id="resume-text"
+              rows={12}
+              placeholder="Paste candidate resume plain text here..."
+              value={resumeText}
+              onChange={(e) => setResumeText(e.target.value)}
+              className="w-full bg-[#15181C] border border-white/20 rounded p-4 text-[#E8E4D8] font-mono text-xs leading-relaxed focus:border-[#D4A537] focus-visible:ring-2 focus-visible:ring-[#D4A537] outline-none"
+            />
+          </div>
 
           <div className="flex items-center justify-between pt-2">
             <button

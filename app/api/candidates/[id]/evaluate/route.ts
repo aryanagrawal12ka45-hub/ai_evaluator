@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sanitizeText, formatSecureError } from "@/lib/security";
 import {
   AGENTS,
   buildProfile,
@@ -13,7 +14,7 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const candidateId = params.id;
+  const candidateId = sanitizeText(params.id, 100);
   const startTime = Date.now();
 
   try {
@@ -247,7 +248,7 @@ export async function POST(
     });
 
     return NextResponse.json(
-      { error: `Evaluation pipeline failed: ${(error as Error).message}` },
+      formatSecureError(error, "Evaluation pipeline processing error"),
       { status: 500 }
     );
   }

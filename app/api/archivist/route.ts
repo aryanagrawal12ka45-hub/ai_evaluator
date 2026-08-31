@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import Anthropic from "@anthropic-ai/sdk";
+import { sanitizeText, sanitizePrompt, formatSecureError } from "@/lib/security";
 
 function getAnthropicClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -13,7 +14,10 @@ function getAnthropicClient(): Anthropic | null {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { message, currentCandidateId } = body;
+    let { message, currentCandidateId } = body;
+
+    message = sanitizePrompt(message || "", 2000);
+    currentCandidateId = sanitizeText(currentCandidateId || "", 100);
 
     const candidates = await prisma.candidate.findMany({
       orderBy: { createdAt: "asc" },
@@ -91,7 +95,7 @@ STRICT RULES:
   } catch (error) {
     console.error("Error in /api/archivist:", error);
     return NextResponse.json(
-      { error: `Archivist meta-agent error: ${(error as Error).message}` },
+      formatSecureError(error, "Archivist meta-agent service error"),
       { status: 500 }
     );
   }

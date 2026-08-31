@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import Anthropic from "@anthropic-ai/sdk";
+import { sanitizeText, sanitizePrompt, formatSecureError } from "@/lib/security";
 
 function getAnthropicClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -14,11 +15,13 @@ export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const candidateId = params.id;
+  const candidateId = sanitizeText(params.id, 100);
 
   try {
     const body = await request.json();
-    const { message, history = [] } = body;
+    let { message, history = [] } = body;
+
+    message = sanitizePrompt(message || "", 2000);
 
     if (!message || message.trim() === "") {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
@@ -124,7 +127,7 @@ ${JSON.stringify(contextPacket, null, 2)}`;
   } catch (error) {
     console.error(`Error in /api/candidates/${candidateId}/chat:`, error);
     return NextResponse.json(
-      { error: `Interrogation failed: ${(error as Error).message}` },
+      formatSecureError(error, "Candidate cross-examination error"),
       { status: 500 }
     );
   }

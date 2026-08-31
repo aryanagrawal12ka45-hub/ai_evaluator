@@ -135,7 +135,9 @@ export const ArchivistWidget: React.FC<ArchivistWidgetProps> = ({
         <div className="fixed bottom-6 left-6 z-40 flex items-center gap-3">
           <button
             onClick={() => setIsOpen(true)}
-            className="bg-[#232830] text-[#E8E4D8] border-2 border-[#D4A537] px-4 py-3 rounded shadow-2xl flex items-center gap-2.5 hover:bg-[#2D343F] transition-all font-mono text-xs font-bold uppercase relative group"
+            aria-expanded={false}
+            aria-label={`Open The Archivist Session Memory Widget (${archiveCount} candidates)`}
+            className="bg-[#232830] text-[#E8E4D8] border-2 border-[#D4A537] px-4 py-3 rounded shadow-2xl flex items-center gap-2.5 hover:bg-[#2D343F] focus-visible:ring-2 focus-visible:ring-[#D4A537] focus-visible:outline-none transition-all font-mono text-xs font-bold uppercase relative group"
           >
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4A537] opacity-75"></span>
@@ -150,7 +152,12 @@ export const ArchivistWidget: React.FC<ArchivistWidgetProps> = ({
 
       {/* Slide-out / Floating Archivist Drawer */}
       {isOpen && (
-        <div className="fixed bottom-6 left-6 z-50 w-full sm:w-[480px] h-[580px] bg-[#15181C] border-2 border-[#D4A537] rounded-md shadow-2xl flex flex-col justify-between text-[#E8E4D8]">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="The Archivist Session Memory Drawer"
+          className="fixed bottom-6 left-6 z-50 w-full sm:w-[480px] h-[580px] bg-[#15181C] border-2 border-[#D4A537] rounded-md shadow-2xl flex flex-col justify-between text-[#E8E4D8]"
+        >
           {/* Header */}
           <div className="p-4 bg-[#232830] border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -162,13 +169,14 @@ export const ArchivistWidget: React.FC<ArchivistWidgetProps> = ({
                 <h4 className="font-display font-bold text-base text-[#D4A537] uppercase tracking-wide flex items-center gap-2">
                   <Brain className="w-4 h-4 text-[#D4A537]" /> The Archivist — Session Memory
                 </h4>
-                <p className="font-mono text-[10px] text-white/60">6th Meta-Agent • Cross-Candidate Pattern Intelligence</p>
+                <p className="font-mono text-[10px] text-white/70">6th Meta-Agent • Cross-Candidate Pattern Intelligence</p>
               </div>
             </div>
 
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white/60 hover:text-white p-1 rounded"
+              aria-label="Close Archivist Drawer"
+              className="text-white/70 hover:text-white p-1 rounded focus-visible:ring-2 focus-visible:ring-[#D4A537] focus-visible:outline-none"
             >
               <X className="w-5 h-5" />
             </button>

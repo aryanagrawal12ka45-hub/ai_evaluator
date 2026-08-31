@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { ProgressRail } from "@/components/ProgressRail";
-import { StampBadge3D } from "@/components/3d/StampBadge3D";
+import { StampBadge3DLazy } from "@/components/3d/Lazy3DComponents";
 import { VoicePlayer } from "@/components/VoicePlayer";
 import { ConsensusMatrix } from "@/components/ConsensusMatrix";
 import { FairnessCard } from "@/components/FairnessCard";
@@ -316,7 +316,7 @@ export default function CandidateDetailPage() {
                   </div>
 
                   <div>
-                    <StampBadge3D recommendation={verdict.recommendation} size="lg" animate={true} />
+                    <StampBadge3DLazy recommendation={verdict.recommendation} size="lg" animate={true} />
                   </div>
                 </div>
 

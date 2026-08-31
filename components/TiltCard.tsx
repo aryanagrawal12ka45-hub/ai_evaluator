@@ -76,7 +76,8 @@ export const TiltCard: React.FC<TiltCardProps> = ({
             : "transform 0.5s ease-out, box-shadow 0.5s ease-out",
           transformStyle: "preserve-3d",
         }}
-        className={`relative transition-all duration-300 ${className}`}
+        className={`relative transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A537] focus-visible:ring-offset-2 focus-visible:ring-offset-[#15181C] rounded-lg ${className}`}
+        tabIndex={0}
       >
         {children}
 

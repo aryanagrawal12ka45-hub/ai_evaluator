@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { StampBadge3D } from "@/components/3d/StampBadge3D";
+import { StampBadge3DLazy } from "@/components/3d/Lazy3DComponents";
 import { TiltCard } from "@/components/TiltCard";
 import {
   FolderGit2,
@@ -133,7 +133,7 @@ export default async function DashboardPage() {
                     </div>
 
                     <div>
-                      <StampBadge3D
+                      <StampBadge3DLazy
                         recommendation={verdict?.recommendation || "Hire"}
                         size="sm"
                         animate={false}

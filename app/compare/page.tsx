@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { StampBadge3D } from "@/components/3d/StampBadge3D";
+import { StampBadge3DLazy } from "@/components/3d/Lazy3DComponents";
 import { Scale, ArrowRight, ArrowLeft, RefreshCw, CheckCircle2, Shield, AlertTriangle } from "lucide-react";
 
 interface CandidateSimple {
@@ -132,7 +132,7 @@ export default function ComparePage() {
                 <h3 className="text-3xl font-display font-bold text-[#E8E4D8]">{candA.name}</h3>
                 <p className="text-xs font-mono text-white/70">{candA.roleAppliedFor}</p>
               </div>
-              <StampBadge3D recommendation={candA.verdict?.recommendation || "Hire"} size="sm" animate={false} />
+              <StampBadge3DLazy recommendation={candA.verdict?.recommendation || "Hire"} size="sm" animate={false} />
             </div>
 
             <div className="bg-[#15181C] p-4 rounded border border-white/10 space-y-2">
@@ -163,7 +163,7 @@ export default function ComparePage() {
                 <h3 className="text-3xl font-display font-bold text-[#E8E4D8]">{candB.name}</h3>
                 <p className="text-xs font-mono text-white/70">{candB.roleAppliedFor}</p>
               </div>
-              <StampBadge3D recommendation={candB.verdict?.recommendation || "Hire"} size="sm" animate={false} />
+              <StampBadge3DLazy recommendation={candB.verdict?.recommendation || "Hire"} size="sm" animate={false} />
             </div>
 
             <div className="bg-[#15181C] p-4 rounded border border-white/10 space-y-2">
